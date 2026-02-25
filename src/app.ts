@@ -1,0 +1,26 @@
+import { Hono } from 'hono';
+import { metadataRoutes } from './oauth/metadata.js';
+import { registerRoute } from './oauth/register.js';
+import { authorizeGetRoute } from './oauth/authorize.js';
+import { authorizePostRoute } from './oauth/authorize-submit.js';
+import { acCallbackRoute } from './oauth/ac-callback.js';
+import { tokenRoute } from './oauth/token.js';
+import { mcpProxyRoute } from './mcp/proxy.js';
+
+export const app = new Hono();
+
+// OAuth 2.1 metadata discovery
+app.route('/', metadataRoutes);
+
+// Our OAuth 2.1 server endpoints
+app.route('/', registerRoute);
+app.route('/', authorizeGetRoute);
+app.route('/', authorizePostRoute);
+app.route('/', acCallbackRoute);
+app.route('/', tokenRoute);
+
+// MCP proxy
+app.route('/', mcpProxyRoute);
+
+// Health check
+app.get('/health', (c) => c.json({ status: 'ok' }));

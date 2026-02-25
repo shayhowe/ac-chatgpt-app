@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect ActiveCampaign</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 24px;
+      color: #1a1a2e;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      padding: 40px;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: #356ae6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: #1a1a2e;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0 0 28px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+
+    .input-group:focus-within {
+      border-color: #356ae6;
+      box-shadow: 0 0 0 3px rgba(53, 106, 230, 0.12);
+    }
+
+    .input-prefix {
+      background: #f3f4f6;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #6b7280;
+      border-right: 1.5px solid #d1d5db;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .input-suffix {
+      background: #f3f4f6;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #6b7280;
+      border-left: 1.5px solid #d1d5db;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #1a1a2e;
+      background: white;
+      min-width: 0;
+    }
+
+    .help-text {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+      margin-bottom: 24px;
+    }
+
+    .help-text a {
+      color: #356ae6;
+      text-decoration: none;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background: #356ae6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button[type="submit"]:hover {
+      background: #2856cc;
+    }
+
+    button[type="submit"]:active {
+      transform: scale(0.98);
+    }
+
+    button[type="submit"]:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .security-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 12px;
+      background: #f0f9ff;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #0369a1;
+      line-height: 1.5;
+    }
+
+    .security-note svg {
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">AC</div>
+      <span class="logo-text">AC MCP Gateway</span>
+    </div>
+
+    <h1>Connect ActiveCampaign</h1>
+    <p class="subtitle">
+      ChatGPT wants to access your ActiveCampaign account to manage contacts,
+      deals, automations, and more.
+    </p>
+
+    <form method="POST" action="/oauth/authorize" id="connect-form">
+      <!-- Hidden OAuth params passed through from the authorize request -->
+      <input type="hidden" name="client_id" value="{{CLIENT_ID}}">
+      <input type="hidden" name="redirect_uri" value="{{REDIRECT_URI}}">
+      <input type="hidden" name="code_challenge" value="{{CODE_CHALLENGE}}">
+      <input type="hidden" name="code_challenge_method" value="{{CODE_CHALLENGE_METHOD}}">
+      <input type="hidden" name="state" value="{{STATE}}">
+
+      <label for="subdomain">Your ActiveCampaign subdomain</label>
+      <div class="input-group">
+        <span class="input-prefix">https://</span>
+        <input
+          type="text"
+          id="subdomain"
+          name="subdomain"
+          placeholder="mycompany"
+          required
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
+          pattern="[a-zA-Z0-9\-]+"
+          title="Only letters, numbers, and hyphens"
+        >
+        <span class="input-suffix">.activehosted.com</span>
+      </div>
+      <p class="help-text">
+        Find this in your AC URL, e.g. <code>mycompany</code>.activehosted.com
+      </p>
+
+      <button type="submit" id="submit-btn">
+        Continue with ActiveCampaign &rarr;
+      </button>
+    </form>
+
+    <div class="security-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      <span>
+        You'll be redirected to ActiveCampaign to log in securely. We only store
+        encrypted tokens — never your password.
+      </span>
+    </div>
+  </div>
+
+  <script>
+    // Decode URL-encoded hidden field values
+    document.querySelectorAll('input[type="hidden"]').forEach(function(input) {
+      input.value = decodeURIComponent(input.value);
+    });
+
+    // Disable button while submitting
+    document.getElementById('connect-form').addEventListener('submit', function() {
+      var btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Redirecting…';
+    });
+  </script>
+</body>
+</html>
