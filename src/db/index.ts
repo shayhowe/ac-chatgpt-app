@@ -10,11 +10,24 @@ if (!DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is required');
 }
 
+// Fly's internal Postgres (.flycast / .internal) runs over WireGuard — no SSL needed.
+// External hosts (e.g. Supabase, RDS) still use SSL.
+function resolveSsl(url: string): boolean | { rejectUnauthorized: boolean } {
+  try {
+    const host = new URL(url).hostname;
+    if (host === 'localhost' || host === '127.0.0.1' ||
+        host.endsWith('.internal') || host.endsWith('.flycast')) {
+      return false;
+    }
+  } catch { /* fall through */ }
+  return { rejectUnauthorized: false };
+}
+
 export const sql = postgres(DATABASE_URL, {
   max: 10,
   idle_timeout: 30,
   connect_timeout: 10,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  ssl: resolveSsl(DATABASE_URL),
 });
 
 export async function initDb(): Promise<void> {
