@@ -71,12 +71,13 @@ acCallbackRoute.get('/ac/callback', async (c) => {
       expires_in?: number;
     };
 
-    if (!tokenData.access_token || !tokenData.refresh_token) {
-      return c.html(errorPage('ActiveCampaign did not return valid tokens'), 502);
+    if (!tokenData.access_token) {
+      console.error('AC token response missing access_token:', JSON.stringify(tokenData));
+      return c.html(errorPage('ActiveCampaign did not return a valid access token'), 502);
     }
 
     acAccessToken = tokenData.access_token;
-    acRefreshToken = tokenData.refresh_token;
+    acRefreshToken = tokenData.refresh_token ?? '';
     acExpiresIn = tokenData.expires_in ?? 3600;
   } catch (err) {
     console.error('AC token exchange network error:', err);

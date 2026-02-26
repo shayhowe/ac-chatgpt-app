@@ -58,7 +58,7 @@ registerRoute.post('/oauth/register', async (c) => {
 
   const [client] = await sql`
     INSERT INTO our_clients (redirect_uris, client_name)
-    VALUES (${JSON.stringify(redirect_uris)}, ${client_name ?? null})
+    VALUES (${sql.json(redirect_uris)}, ${client_name ?? null})
     RETURNING id, redirect_uris, client_name, created_at
   `;
 

@@ -9,6 +9,11 @@ import { mcpProxyRoute } from './mcp/proxy.js';
 
 export const app = new Hono();
 
+app.onError((err, c) => {
+  console.error(`${c.req.method} ${c.req.path}`, err);
+  return c.json({ error: 'internal_error', error_description: err.message }, 500);
+});
+
 // OAuth 2.1 metadata discovery
 app.route('/', metadataRoutes);
 

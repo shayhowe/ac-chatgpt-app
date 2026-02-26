@@ -92,7 +92,7 @@ mcpProxyRoute.post('/mcp', async (c) => {
       headers: {
         'Content-Type': c.req.header('content-type') ?? 'application/json',
         Authorization: `Bearer ${acAccessToken}`,
-        Accept: c.req.header('accept') ?? 'application/json, text/event-stream',
+        Accept: 'application/json, text/event-stream',
         'MCP-Protocol-Version': c.req.header('mcp-protocol-version') ?? '2025-03-26',
       },
       body: requestBody,
@@ -138,6 +138,9 @@ async function refreshAcToken(session: UserSession): Promise<UserSession | null>
   } catch {
     return null;
   }
+
+  // No refresh token stored — can't refresh
+  if (!refreshToken) return null;
 
   try {
     const resp = await fetch(AC_TOKEN_ENDPOINT, {

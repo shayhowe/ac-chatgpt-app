@@ -22,6 +22,12 @@ authorizeGetRoute.get('/oauth/authorize', async (c) => {
     return c.text('Only S256 code_challenge_method is supported', 400);
   }
 
+  // Validate client_id is a UUID before querying (avoids a Postgres type error)
+  const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!uuidRe.test(client_id)) {
+    return c.text('Invalid client_id', 400);
+  }
+
   // Validate client exists
   const clients = await sql`
     SELECT id, redirect_uris FROM our_clients WHERE id = ${client_id}
