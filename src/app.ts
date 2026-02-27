@@ -14,6 +14,14 @@ app.onError((err, c) => {
   return c.json({ error: 'internal_error', error_description: err.message }, 500);
 });
 
+// Request/response logging
+app.use('*', async (c, next) => {
+  const start = Date.now();
+  await next();
+  const ms = Date.now() - start;
+  console.log(`${c.req.method} ${c.req.path} → ${c.res.status} (${ms}ms)`);
+});
+
 // OAuth 2.1 metadata discovery
 app.route('/', metadataRoutes);
 
