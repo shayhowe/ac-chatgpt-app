@@ -57,7 +57,8 @@
       "Bash(git push:*)",
       "Bash(git add src/db/index.ts && git commit -m \"Fix SSL detection for Fly internal Postgres \\(no SSL on .flycast/.internal\\)\" && git push && fly deploy 2>&1)",
       "Bash(fly deploy:*)",
-      "Bash(/opt/homebrew/bin/fly deploy:*)"
+      "Bash(/opt/homebrew/bin/fly deploy:*)",
+      "Bash(npm install && npm test 2>&1)"
     ]
   }
 }
