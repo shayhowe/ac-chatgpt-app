@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-vi.mock('../../db/index.js', () => {
+vi.mock('../db/index.js', () => {
   const mockSql = vi.fn().mockResolvedValue([]);
   (mockSql as unknown as Record<string, unknown>).json = vi.fn((v: unknown) => v);
   (mockSql as unknown as Record<string, unknown>).unsafe = vi.fn().mockResolvedValue([]);
@@ -8,7 +8,7 @@ vi.mock('../../db/index.js', () => {
 });
 
 import { mcpProxyRoute } from '../mcp/proxy.js';
-import { sql } from '../../db/index.js';
+import { sql } from '../db/index.js';
 import { encrypt, hashToken } from '../crypto.js';
 import type { UserSession } from '../db/index.js';
 

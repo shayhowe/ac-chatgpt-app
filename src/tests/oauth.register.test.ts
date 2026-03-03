@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Must be hoisted before any imports that use the DB
-vi.mock('../../db/index.js', () => {
+vi.mock('../db/index.js', () => {
   const mockSql = vi.fn().mockResolvedValue([]);
   (mockSql as unknown as Record<string, unknown>).json = vi.fn((v: unknown) => v);
   (mockSql as unknown as Record<string, unknown>).unsafe = vi.fn().mockResolvedValue([]);
@@ -9,7 +9,7 @@ vi.mock('../../db/index.js', () => {
 });
 
 import { registerRoute } from '../oauth/register.js';
-import { sql } from '../../db/index.js';
+import { sql } from '../db/index.js';
 
 const mockSql = vi.mocked(sql);
 

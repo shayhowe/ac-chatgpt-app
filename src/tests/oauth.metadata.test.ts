@@ -39,10 +39,8 @@ describe('GET /.well-known/oauth-authorization-server', () => {
 
 describe('GET /.well-known/oauth-authorization-server/mcp (ChatGPT alias)', () => {
   it('returns the same body as the standard path', async () => {
-    const [standard, alias] = await Promise.all([
-      metadataRoutes.request('/.well-known/oauth-authorization-server').then((r) => r.json()),
-      metadataRoutes.request('/.well-known/oauth-authorization-server/mcp').then((r) => r.json()),
-    ]);
+    const standard = await (await metadataRoutes.request('/.well-known/oauth-authorization-server')).json();
+    const alias = await (await metadataRoutes.request('/.well-known/oauth-authorization-server/mcp')).json();
     expect(alias).toEqual(standard);
   });
 
